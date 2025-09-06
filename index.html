@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TezTayor - Кафе</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Oswald:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+<!-- FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+<!-- Основные стили -->
+<link rel="stylesheet" href="CSS/style.css">
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <h1>TezTayor №1</h1>
+    <p>Бургеры, пицца, хот-доги — всё, что ты любишь!</p>
+  </div>
+
+  <div class="top-menu">
+    <button id="cartBtn" class="icon-btn"><i class="fas fa-shopping-cart"></i> Корзина <span class="cart-count" id="cartCount">0</span></button>
+    <button id="aboutBtn" class="icon-btn"><i class="fas fa-info-circle"></i> О нас</button>
+    <button id="contactBtn" class="icon-btn"><i class="fas fa-phone"></i> Контакты</button>
+  </div>
+</header>
+
+<nav>
+  <button class="nav-btn active" data-category="all">Все</button>
+  <button class="nav-btn" data-category="burgers">Бургеры</button>
+  <button class="nav-btn" data-category="pizza">Пицца</button>
+  <button class="nav-btn" data-category="hotdogs">Хот-Доги</button>
+  <button class="nav-btn" data-category="drinks">Напитки</button>
+  <button class="nav-btn" data-category="sides">Гарниры</button>
+</nav>
+
+<main>
+  <section class="menu" id="menuList">
+    <!-- Пример одного товара -->
+    <article class="menu-item" data-id="1" data-category="burgers" data-name="Чизбургер" data-price="35" data-img="https://media.istockphoto.com/id/2061716709/photo/grilled-rib-burger.jpg">
+      <img src="https://media.istockphoto.com/id/2061716709/photo/grilled-rib-burger.jpg" alt="Чизбургер">
+      <h3>Чизбургер</h3>
+      <p>Сочный бургер с котлетой, сыром и овощами.</p>
+      <div class="price">35 сомони</div>
+      <button class="add-to-cart"><i class="fas fa-plus-circle"></i> Добавить</button>
+    </article>
+    <!-- Можно добавить остальные блюда аналогично -->
+  </section>
+</main>
+
+<footer>
+  <p>&copy; 2025 TezTayor | Все права защищены.</p>
+</footer>
+
+<!-- Модальное окно корзины -->
+<div class="modal" id="cartModal" aria-hidden="true">
+  <div class="modal-content">
+    <button class="modal-close" id="closeCart"><i class="fas fa-times"></i></button>
+    <h2><i class="fas fa-shopping-basket"></i> Корзина</h2>
+    <div id="cartItems" class="cart-items">
+      <p class="empty-cart-message">Корзина пуста.</p>
+    </div>
+
+    <div class="cart-summary">
+      <div>Итого: <span id="cartTotalItems">0</span> шт.</div>
+      <div>Сумма: <strong id="cartTotalPrice">0</strong> сомони</div>
+    </div>
+
+    <div class="cart-actions">
+      <button id="clearCart" class="btn neutral" disabled><i class="fas fa-trash"></i> Очистить корзину</button>
+      <button id="checkoutBtn" class="btn primary" disabled><i class="fas fa-check-circle"></i> Оформить заказ</button>
+      <button id="cancelOrderBtn" class="btn neutral" disabled><i class="fas fa-times-circle"></i> Отменить заказ</button>
+    </div>
+  </div>
+</div>
+
+<!-- Модальное окно оформления заказа -->
+<div class="modal" id="orderModal" aria-hidden="true">
+  <div class="modal-content">
+    <button class="modal-close" id="closeOrder"><i class="fas fa-times"></i></button>
+    <h2><i class="fas fa-clipboard-list"></i> Оформление заказа</h2>
+
+    <form id="orderForm" class="order-form" autocomplete="off" novalidate>
+      <label for="userId">Ваш Telegram ID:</label>
+      <input id="userId" name="userId" type="text" value="" placeholder="ID будет подставлен автоматически" disabled />
+
+      <label for="customerName">Имя:</label>
+      <input id="customerName" name="customerName" type="text" required placeholder="Иван" />
+
+      <label for="customerPhone">Телефон (+992):</label>
+      <div class="phone-row">
+        <span class="prefix">+992</span>
+        <input id="customerPhone" name="customerPhone" type="text" inputmode="numeric" required pattern="^[0-9]{9}$" placeholder="000000000" maxlength="9" />
+      </div>
+
+      <div class="delivery-options">
+        <label><input type="radio" name="delivery" value="pickup" checked /> Самовывоз</label>
+        <label><input type="radio" name="delivery" value="delivery" /> Доставка</label>
+      </div>
+
+      <div id="addressBlock" class="address-block" style="display:none;">
+        <label for="customerAddress">Адрес:</label>
+        <input id="customerAddress" name="customerAddress" type="text" placeholder="Улица, дом" />
+      </div>
+
+      <div class="form-actions">
+        <button type="button" id="cancelOrderForm" class="btn neutral">Отменить заказ</button>
+        <button type="submit" id="confirmOrder" class="btn success">Подтвердить</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Модальные окна "О нас" и "Контакты" -->
+<div class="modal" id="aboutModal" aria-hidden="true">
+  <div class="modal-content">
+    <button class="modal-close" data-close="aboutModal"><i class="fas fa-times"></i></button>
+    <h2><i class="fas fa-info-circle"></i> О нас</h2>
+    <p><strong>Тез-Таёр</strong> — уютная бургерная, готовим быстро и с любовью. Бургеры, пицца, хот-доги, гарниры — всё свежее и вкусное.</p>
+  </div>
+</div>
+
+<div class="modal" id="contactModal" aria-hidden="true">
+  <div class="modal-content">
+    <button class="modal-close" data-close="contactModal"><i class="fas fa-times"></i></button>
+    <h2><i class="fas fa-phone"></i> Контакты</h2>
+    <p>Телефон: <strong>+992 000 000 000</strong></p>
+    <p>Адрес: <strong>г. Душанбе, ул. Ленина 10</strong></p>
+  </div>
+</div>
+
+<!-- Уведомления -->
+<div class="notification"></div>
+
+<!-- JS -->
+<script src="JS/menu.js"></script>
+
+</body>
+</html>
